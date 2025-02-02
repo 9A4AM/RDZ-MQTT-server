@@ -73,6 +73,9 @@
                 .then(data => {
                     const tableBody = document.getElementById('data-table');
                     tableBody.innerHTML = ''; // Očisti prethodne podatke
+					
+					// Sortiraj podatke od najnovijeg prema najstarijem 
+                    data.sort((a, b) => new Date(b.time) - new Date(a.time));
                     data.forEach(entry => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
@@ -98,8 +101,8 @@
                 });
         }
 
-        // Automatsko ažuriranje svakih 10 sekundi
-        setInterval(fetchData, 5000); // 10000 ms = 10 sekundi
+        // Automatsko ažuriranje svakih 5 sekundi
+        setInterval(fetchData, 5000); // 5000 ms = 5 sekundi
 
         // Početni poziv za učitavanje podataka
         fetchData();
