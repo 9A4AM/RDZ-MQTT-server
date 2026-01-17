@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import json
 from flask import Flask, render_template, jsonify
-from flask import current_app as app  
+from flask import current_app as app  # Uvozi trenutnu aplikaciju
 from models import db, Radiosonda
 from datetime import datetime
 
@@ -13,17 +13,17 @@ db.init_app(app)
 
 # Kreiranje baze podataka ako ne postoji
 with app.app_context():
-    db.create_all()  # Stvori sve tablice definirane u SQLAlchemy modelima
+    db.create_all()  # Stvori sve tablice definisane u SQLAlchemy modelima
 
 # Callback funkcija za povezivanje na broker
 def on_connect(client, userdata, flags, rc):
     print("Connected to Mosquitto!")
-    client.subscribe("rdz_sonde_server/packet")  # Pretplata na packet temu
+    client.subscribe("rdz_sonde_server/packet")  # Pretplata na sve teme pod prefiksom rdz_sonde_server/
 
 def on_message(client, userdata, msg):
     try:
         data = json.loads(msg.payload.decode())  # Dekodiraj MQTT poruku
-        # print(f"Received data: {data}")  # Ispis podataka
+        print(f"Received data: {data}")  # Ispis podataka
 
         # Provjeri postoji li 'vframe' i koristi ga za provjeru duplikata
         vframe_value = int(data.get("vframe"))
@@ -60,7 +60,7 @@ def on_message(client, userdata, msg):
                 temp=data.get('temp'),
                 humidity=data.get('humidity'),
                 frame=data.get('frame'),
-                vframe=vframe_value,  
+                vframe=vframe_value,  # Spremi vframe u bazu
                 launchsite=data.get('launchsite'),
                 batt=data.get('batt')
             )
@@ -119,7 +119,10 @@ def get_data():
     } for r in data])
 
 
+@app.route("/map")
+def map_view():
+    return render_template("map.html")
 
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=1111)
+    app.run(debug=False, host="0.0.0.0", port=1189)
