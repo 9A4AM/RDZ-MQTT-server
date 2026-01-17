@@ -44,11 +44,14 @@
 </head>
 <body>
     <h1>Radiosonde database from RDZ_TTGO MQTT -> 9A4AM@2025</h1>
+	    <button onclick="window.open('/map', '_blank')"
+            style="padding:10px 20px;font-size:16px;">
+        MAP
+        </button>
     <table>
         <thead>
             <tr>
                 <th>Sonde ID</th>
-                <th>Frame</th>
                 <th>Lat</th>
                 <th>Lon</th>
                 <th>Alt(m)</th>
@@ -80,7 +83,6 @@
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${entry.ser}</td>
-                            <td>${entry.frame}</td>
                             <td>${entry.lat}</td>
                             <td>${entry.lon}</td>
                             <td>${entry.alt}</td>
@@ -92,6 +94,7 @@
                             <td>${entry.freq}</td>
                             <td>${entry.launchsite}</td>
                             <td>${entry.batt}</td>
+							
                         `;
                         tableBody.appendChild(row);
                     });
